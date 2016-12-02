@@ -1,0 +1,34 @@
+﻿@model IEnumerable<BugTracker2.Models.ApplicationUser>
+@using BugTracker2.Models;
+<style>
+    ul.a {
+        list-style-type: circle;
+    }
+.center {
+    color: red;
+}
+</style>
+<h1>User List</h1>
+
+@foreach (var item in Model)
+{
+
+    <h3>
+        @Html.DisplayFor(modelItem => item.Fname) @Html.DisplayFor(modelItem => item.Lname)
+        </h3>
+        <h4 class="center">
+        @{
+            var roleHelper = new UserRoleAssignHelper();
+            List<string> roles = new List<string>(roleHelper.ListUserRoles(item.Id));
+        }
+        <ul class="a">
+            @foreach (string role in roles)
+            {
+                <li>@role</li>
+            }
+        </ul>
+        </h4>
+        <p>
+            @Html.ActionLink("Assign User Roles", "Edit", "Admin", new { id = item.Id }, null)
+       </p>
+}

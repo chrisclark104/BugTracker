@@ -1,0 +1,154 @@
+﻿@model BugTracker2.Models.Ticket
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AssignedUser.Fname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AssignedUser.Fname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedUser.Fname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedUser.Fname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Project.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated)
+        </dd>
+
+    </dl>
+</div>
+
+<div>
+    @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+    {
+        <input type="hidden" name="TicketId" value="@Model.Id" />
+        <textarea name="Body"></textarea>
+            <input type="submit" />
+    }
+</div>
+@foreach (var comment in Model.Comments)
+{
+    <ul>
+        <li>Posted by @comment.User.Fname at @comment.Created</li>
+        <li>@comment.Body</li>
+    </ul>
+    <p>
+        @Html.ActionLink("Edit", "Edit", "Comments", new { id = comment.Id }, null) |
+        @Html.ActionLink("Delete", "Delete", "Comments", new { id = comment.Id }, null)
+    </p>
+}
+<div>
+    @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+    {
+        <input type="hidden" id="TicketId" name="TicketId" value="@Model.Id" />
+        <input name="image" type="file" class="form-control" id="image" />
+        <textarea id="Body" name="Body"></textarea>
+        <input type="submit" />
+    }
+    @foreach (var ticketAttachment in Model.Attachments)
+    {
+        <div>Posted by @ticketAttachment.User.Fname @ticketAttachment.Body</div>
+        <div>@ticketAttachment.MediaURL</div>
+        <img src="@ticketAttachment.MediaURL" alt="Attachment Photo" style="max-width:150px" />
+
+        <p>
+            @Html.ActionLink("Delete", "Delete", "TicketAttachments", new { id = ticketAttachment.Id }, null)
+        </p>
+    }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@if (Model.Histories.Count > 0)
+{
+    <h4><u>Ticket History</u></h4>
+    foreach (var history in Model.Histories)
+    {
+        if (history.Property == "AssignedToUserId" || history.Property == "Description" || history.Property == "TicketTypeId" || history.Property == "TicketStatusId")
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    The <b>@history.PropertyDisplay</b> was <b>changed from</b> @(history.OldValueDisplay ?? "unset") <b>to</b> @(history.NewValueDisplay ?? "unset"), <b>on</b> @history.Modified.ToString("g")
+                </div>
+            </div>
+        }
+        else if (history.Property == "Comments")
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    A <b>@history.PropertyDisplay</b> was <b>added</b> by @(history.User.Email ?? "a removed user"), <b>on</b> @history.Modified.ToString("g").
+                </div>
+            </div>
+        }
+        else if (history.Property == "Attachments")
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    An <b>@history.PropertyDisplay</b> was <b>added</b> by @(history.User.Email ?? "a removed user"), <b>on</b> @history.Modified.ToString("g").
+                </div>
+            </div>
+        }
+        else if (history.Property == "Notifications")
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    A <b>@history.PropertyDisplay</b> was <b>sent</b> to @Model.AssignedUser.Email <b>on</b> @history.Modified.ToString("g").
+                </div>
+            </div>
+        }
+    }
+    <br />
+    <br />
+}

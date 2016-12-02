@@ -1,0 +1,17 @@
+﻿@model BugTracker2.Models.ProjectUserViewModel
+
+@{
+    ViewBag.Title = "EditProjectUser";
+}
+
+<h2>Edit Project Users - @Model.Project.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.Project.Id)
+
+    @Html.AntiForgeryToken()
+    @Html.ListBox("SelectedUsers", Model.Users)
+
+    <input type="submit" value="Save" class="btn btn-default" href="~/Views/Projects/Index.cshtml" />
+}

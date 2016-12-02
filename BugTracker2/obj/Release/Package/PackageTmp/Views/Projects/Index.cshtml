@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BugTracker2.Models.Project>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .chris{
+        color:black;
+    }
+    .yellow{
+        color:yellow;
+    }
+</style>
+<h2>List of Current Projects</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table id="mytable" class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <h4 class="chris">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </h4>
+                </td>
+                <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Users", "EditProjectUser", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section cssStyle {
+    @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
+}
+@section scripts{
+    <!-- DataTables -->
+    @Scripts.Render("~/js/jquery.dataTables.min.js")
+    <script src="~/Scripts/Chris.BugTracker2.js"></script>
+}

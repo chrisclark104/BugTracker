@@ -1,0 +1,84 @@
+﻿@model IEnumerable<BugTracker2.Models.Ticket>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>List of Current Tickets</h2>
+
+<p>
+@if (ViewContext.HttpContext.User.IsInRole("Submitter"))
+{ 
+    @Html.ActionLink("Create New", "Create")
+}
+</p>
+    <table id="mytable" class="table">
+        <thead>
+            <tr>
+                <th>Assigned to</th>
+                <th>Created by</th>
+                <th>Project</th>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Priority Level</th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+           
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssignedUser.Fname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedUser.Fname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Body)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Priority.Priority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Updated)
+                    </td>
+                    
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+@section cssStyle {
+    @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
+}
+@section scripts{
+    <!-- DataTables -->
+    @Scripts.Render("~/js/jquery.dataTables.min.js")
+    <script src="~/Scripts/Chris.BugTracker2.js"></script>
+}
